@@ -9,7 +9,7 @@ Dotenv.load
 
 def list_channels
   response = HTTParty.get(CHANNELS_URL, query: {
-      token: "xoxp-1222171918129-1261274944689-1414967123620-e5cc19a67f6f2f4713a3c9a8f31f5f84",
+      token: "xoxp-1222171918129-1234006628919-1405389133525-70a09ce2b511255859fb7b95c8733cfc",
   })
 
   return response["channels"].map do |channel|
@@ -24,7 +24,7 @@ end
 
 def list_users
   response = HTTParty.get(USERS_URL, query: {
-      token: "xoxp-1222171918129-1261274944689-1414967123620-e5cc19a67f6f2f4713a3c9a8f31f5f84",
+      token: "xoxp-1222171918129-1234006628919-1405389133525-70a09ce2b511255859fb7b95c8733cfc",
   })
 
   return response["members"].map do |user|
@@ -37,15 +37,23 @@ def list_users
 end
 
 def main
-  puts "Welcome to the Ada Slack CLI!"
   workspace = Workspace.new
-  puts "#{list_users.length} users were loaded!"
-  puts "#{list_channels.length} channels were loaded!"
+  continue = true
+  puts "#{list_users.length} users and #{list_channels.length} channels were loaded!"
+  while continue
+    puts "Welcome to the Ada Slack CLI!"
+    puts "What do you want to do? => \n1. list users\n2. list channels \n3. quit"
+    input = gets.chomp
 
-
-
-  
-
+    case input
+    when "1", "list users"
+      puts list_users
+    when "2", "list channels"
+      puts list_channels
+    when "3", "quit"
+      continue = false
+    end
+  end
   puts "Thank you for using the Ada Slack CLI"
 end
 
