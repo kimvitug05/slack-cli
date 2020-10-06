@@ -1,12 +1,15 @@
 require 'dotenv'
+require_relative 'recipient'
+# require 'table_print'
 CHANNELS_URL = "https://slack.com/api/conversations.list"
 
 Dotenv.load
 
-class Channel
+class Channel < Recipient
   attr_reader :name, :topic, :member_count, :id
 
   def initialize(name:, topic:, member_count:, id:)
+    # super(id)
     @name = name
     @topic = topic
     @member_count = member_count
@@ -14,7 +17,7 @@ class Channel
   end
 
   def self.list_all
-    response = HTTParty.get(CHANNELS_URL, query: {
+    response = self.get(CHANNELS_URL, query: {
         token: ENV["TOKEN"],
     })
 
@@ -28,7 +31,7 @@ class Channel
     end
   end
 
-  def details(channel)
-    tp channel
+  def details
+    return tp self, :name, :member_count, :id, :topic
   end
 end

@@ -30,4 +30,12 @@ describe User do
       expect(@response.length).must_equal 156
     end
   end
+
+  describe "details" do
+    it "prints a table" do
+
+      expect(@user.details).must_be_instance_of TablePrint::Returnable
+    end
+
+  end
 end

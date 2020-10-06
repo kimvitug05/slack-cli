@@ -1,9 +1,14 @@
+require 'httparty'
 class Recipient
-  attr_reader :slack_id, :name
+  attr_reader :id, :name
 
   def initialize
-    @slack_id = slack_id
+    @id = id
     @name = name
+  end
+
+  def self.get(url, params)
+    return HTTParty.get(url, params)
   end
 
   def details

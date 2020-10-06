@@ -5,6 +5,7 @@ require_relative 'channel'
 require 'httparty'
 require 'table_print'
 
+
 Dotenv.load
 
 def main
@@ -18,9 +19,12 @@ def main
 
     case input
     when "1", "list users"
-      tp workspace.users, :name, :real_name, :id
+      tp workspace.users
+      # tp workspace.users, :name, :real_name, :id
     when "2", "list channels"
-      tp workspace.channels, :name, :member_count, :id, :topic
+      workspace.show_details
+
+      # tp workspace.channels, :name, :member_count, :id, :topic
     when "3", "quit"
       continue = false
     end

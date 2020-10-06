@@ -1,19 +1,23 @@
 require 'dotenv'
+require_relative 'recipient'
+require 'table_print'
 USERS_URL = "https://slack.com/api/users.list"
 
 Dotenv.load
 
-class User
+class User < Recipient
   attr_reader :name, :real_name, :id
 
   def initialize(name:, real_name:, id:)
-    @name = name
-    @real_name = real_name
+    # super(id, name)
     @id = id
+    @real_name = real_name
+    @name = name
   end
 
+
   def self.list_all
-    response = HTTParty.get(USERS_URL, query: {
+    response = self.get(USERS_URL, query: {
         token: ENV["TOKEN"],
     })
     return response["members"].map do |user|
@@ -25,8 +29,9 @@ class User
     end
   end
 
-  def details(user)
-    tp user
+  def details
+    return tp self, :name, :real_name, :id
+
   end
 
 end
