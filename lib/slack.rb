@@ -6,10 +6,6 @@ require 'httparty'
 
 Dotenv.load
 
-def list_channels
-
-end
-
 def main
   workspace = Workspace.new
   continue = true
