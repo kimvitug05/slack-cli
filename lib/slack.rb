@@ -1,25 +1,13 @@
 require 'dotenv'
 require_relative 'workspace'
 require_relative 'user'
+require_relative 'channel'
 require 'httparty'
 
-CHANNELS_URL = "https://slack.com/api/conversations.list"
-USERS_URL = "https://slack.com/api/users.list"
 Dotenv.load
 
 def list_channels
-  response = HTTParty.get(CHANNELS_URL, query: {
-      token: ENV["TOKEN"],
-  })
 
-  return response["channels"].map do |channel|
-    {
-        name: channel["name"],
-        topic: channel["topic"]["value"],
-        member_count: channel["num_members"],
-        id: channel["id"]
-    }
-  end
 end
 
 def main
@@ -35,7 +23,7 @@ def main
     when "1", "list users"
       puts User.list_all
     when "2", "list channels"
-      puts list_channels
+      puts Channel.list_all
     when "3", "quit"
       continue = false
     end
