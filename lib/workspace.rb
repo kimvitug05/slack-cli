@@ -2,8 +2,8 @@ class Workspace
   attr_reader :users, :channels
 
   def initialize
-    @users = []
-    @channels = []
+    @users = []  #User.list_all
+    @channels = [] #Channel.list_all
   end
 
   def select_user(name = nil, id = nil)
