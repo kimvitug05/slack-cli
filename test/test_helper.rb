@@ -11,15 +11,13 @@ require "minitest/reporters"
 require "vcr"
 require "webmock/minitest"
 require "dotenv"
+require_relative '../lib/user'
+require_relative '../lib/channel'
+require_relative '../lib/workspace'
 
 Dotenv.load
 
 Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
-
-VCR.configure do |config|
-  config.cassette_library_dir = "test/cassettes"
-  config.hook_into :webmock
-end
 
 VCR.configure do |config|
   config.cassette_library_dir = "test/cassettes" # folder where casettes will be located
@@ -30,8 +28,8 @@ VCR.configure do |config|
   }
 
   # Don't leave our token lying around in a cassette file.
-  config.filter_sensitive_data("<SLACK_TOKEN>") do
-    ENV["SLACK_TOKEN"]
+  config.filter_sensitive_data("<TOKEN>") do
+    ENV["TOKEN"]
   end
 
 end

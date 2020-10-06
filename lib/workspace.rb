@@ -1,7 +1,7 @@
 require_relative 'user'
 require_relative 'channel'
 require 'httparty'
-require 'table_print'
+# require 'table_print'
 require 'dotenv'
 Dotenv.load
 
