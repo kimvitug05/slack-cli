@@ -4,12 +4,11 @@ require 'httparty'
 
 CHANNELS_URL = "https://slack.com/api/conversations.list"
 USERS_URL = "https://slack.com/api/users.list"
-
 Dotenv.load
-
+# p TOKEN = ENV["TOKEN"]
 def list_channels
   response = HTTParty.get(CHANNELS_URL, query: {
-      token: "xoxp-1222171918129-1234006628919-1405389133525-70a09ce2b511255859fb7b95c8733cfc",
+      token: ENV["TOKEN"],
   })
 
   return response["channels"].map do |channel|
@@ -24,7 +23,7 @@ end
 
 def list_users
   response = HTTParty.get(USERS_URL, query: {
-      token: "xoxp-1222171918129-1234006628919-1405389133525-70a09ce2b511255859fb7b95c8733cfc",
+      token: ENV["TOKEN"],
   })
 
   return response["members"].map do |user|
