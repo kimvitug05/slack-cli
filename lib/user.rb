@@ -6,7 +6,7 @@ Dotenv.load
 class User
   attr_reader :name, :real_name, :id
 
-  def initialize(name, real_name, id)
+  def initialize(name:, real_name:, id:)
     @name = name
     @real_name = real_name
     @id = id
@@ -16,13 +16,17 @@ class User
     response = HTTParty.get(USERS_URL, query: {
         token: ENV["TOKEN"],
     })
-
     return response["members"].map do |user|
-      {
-          user_name: user["name"],
+      self.new({
+          name: user["name"],
           real_name: user["real_name"],
           id: user["id"]
-      }
+      })
     end
   end
+
+  def details(user)
+    tp user
+  end
+
 end
