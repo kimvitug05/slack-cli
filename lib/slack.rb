@@ -3,12 +3,13 @@ require_relative 'workspace'
 require 'httparty'
 
 CHANNELS_URL = "https://slack.com/api/conversations.list"
+USERS_URL = "https://slack.com/api/users.list"
 
 Dotenv.load
 
 def list_channels
   response = HTTParty.get(CHANNELS_URL, query: {
-      token: "xoxp-1222171918129-1261274944689-1408480907106-983ae5e232993a08337168b03cc11e74",
+      token: "xoxp-1222171918129-1261274944689-1414967123620-e5cc19a67f6f2f4713a3c9a8f31f5f84",
   })
 
   return response["channels"].map do |channel|
@@ -21,13 +22,27 @@ def list_channels
   end
 end
 
+def list_users
+  response = HTTParty.get(USERS_URL, query: {
+      token: "xoxp-1222171918129-1261274944689-1414967123620-e5cc19a67f6f2f4713a3c9a8f31f5f84",
+  })
+
+  return response["members"].map do |user|
+    {
+        user_name: user["name"],
+        real_name: user["real_name"],
+        id: user["id"]
+    }
+  end
+end
+
 def main
   puts "Welcome to the Ada Slack CLI!"
   workspace = Workspace.new
 
   # TODO project
 
-  puts list_channels
+  
 
   puts "Thank you for using the Ada Slack CLI"
 end
