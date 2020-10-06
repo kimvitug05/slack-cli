@@ -39,8 +39,10 @@ end
 def main
   puts "Welcome to the Ada Slack CLI!"
   workspace = Workspace.new
+  puts "#{list_users.length} users were loaded!"
+  puts "#{list_channels.length} channels were loaded!"
 
-  # TODO project
+
 
   
 
