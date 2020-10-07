@@ -12,23 +12,51 @@ def main
   workspace = Workspace.new
   continue = true
   # puts "#{list_users.length} users and #{list_channels.length} channels were loaded!"
+  puts "\nWelcome to the Ada Slack CLI!"
+
+
   while continue
-    puts "Welcome to the Ada Slack CLI!"
-    puts "What do you want to do? => \n1. list users\n2. list channels \n3. quit"
-    input = gets.chomp
+    puts "\nWhat do you want to do? => \n1. List Users\n2. List Channels \n3. Select User \n4. Select Channel \n5. Details \n6. Quit"
+    print "Selection: "
+    input = gets.chomp.downcase
+    puts
 
     case input
     when "1", "list users"
-      tp workspace.users
-      # tp workspace.users, :name, :real_name, :id
-    when "2", "list channels"
-      workspace.show_details
 
-      # tp workspace.channels, :name, :member_count, :id, :topic
-    when "3", "quit"
+      tp workspace.users, :name, :real_name, :slack_id, :status_text, :status_emoji
+
+    when "2", "list channels"
+
+      tp workspace.channels, :name, :member_count, :slack_id, :topic
+
+    when "3", "select user"
+
+      print "Please enter a user name or ID: "
+      selection = gets.chomp
+      workspace.select_user(selection)
+
+    when "4", "select channel"
+
+      print "Please enter a channel name or ID: "
+      selection = gets.chomp
+      workspace.select_channel(selection)
+
+    when "5", "details"
+
+      begin
+        workspace.show_details
+      rescue NoMethodError
+        puts "You haven't selected any user or channel yet."
+      end
+
+    when "6", "quit"
+
       continue = false
+
     end
   end
+
   puts "Thank you for using the Ada Slack CLI"
 end
 

@@ -1,7 +1,7 @@
 require_relative 'user'
 require_relative 'channel'
 require 'httparty'
-# require 'table_print'
+require 'table_print'
 require 'dotenv'
 Dotenv.load
 
@@ -14,28 +14,36 @@ class Workspace
     @selected = nil
   end
 
-  def select_user(name:nil, id:nil)
-    if name
-      @selected = @users.find { |user| user.name == name }
-    elsif id
-      @selected = @users.find { |user| user.name == id }
-    else
-      raise ArgumentError, "Please enter a valid user name or id."
+  def select_user(input)
+    @selected = nil
+
+    #TODO -- REFACTOR
+    if @selected.nil?
+      @selected = @users.find { |user| user.name == input }
+    elsif @selected.nil?
+      @selected = @users.find { |user| user.slack_id == input }
+    end
+
+    if @selected.nil?
+      puts "Please enter a valid user name or id."
     end
   end
 
-  def select_channel(channel_name:nil, id:nil)
-    if channel_name
-      @selected = @channels.find { |channel| channel.name == channel_name }
-    elsif id
+  def select_channel(input)
+    @selected = nil
+
+    #TODO -- REFACTOR
+    if @selected.nil?
+      @selected = @channels.find { |channel| channel.name == input }
+    elsif @selected.nil?
       @selected = @channels.find { |channel| channel.id == id }
-    else
-      raise ArgumentError, "Please enter a valid channel name or id."
+    elsif @selected.nil?
+      puts "Please enter a valid channel name or id."
     end
   end
 
   def show_details
-    return @selected.details
+    @selected.details
   end
 end
 

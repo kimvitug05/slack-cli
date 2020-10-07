@@ -6,13 +6,13 @@ USERS_URL = "https://slack.com/api/users.list"
 Dotenv.load
 
 class User < Recipient
-  attr_reader :name, :real_name, :id
+  attr_reader :real_name, :status_text, :status_emoji
 
-  def initialize(name:, real_name:, id:)
-    # super(id, name)
-    @id = id
+  def initialize(slack_id, name, real_name, status_text, status_emoji)
+    super(slack_id, name)
     @real_name = real_name
-    @name = name
+    @status_text = status_text
+    @status_emoji = status_emoji
   end
 
 
@@ -20,18 +20,20 @@ class User < Recipient
     response = self.get(USERS_URL, query: {
         token: ENV["TOKEN"],
     })
+
     return response["members"].map do |user|
-      self.new({
-          name: user["name"],
-          real_name: user["real_name"],
-          id: user["id"]
-      })
+      self.new(
+        user["id"],
+        user["name"],
+        user["real_name"],
+        user["status_text"],
+        user["status_emoji"]
+      )
     end
   end
 
   def details
-    return tp self, :name, :real_name, :id
-
+    return tp self, :name, :real_name, :slack_id
   end
 
 end
