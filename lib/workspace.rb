@@ -35,7 +35,7 @@ class Workspace
     @selected ? @selected.send_message(message) : ( puts "You haven't selected any user or channel yet." )
   end
 
-  def bot_post_message(user_name, emoji, message)
+  def bot_post_message(user_name = "SLACKBOT", emoji = ":sparkles:", message)
     #TODO
     @selected ? @selected.bot_post_message(user_name, emoji, message) : ( puts "You haven't selected any user or channel yet." )
   end

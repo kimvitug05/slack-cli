@@ -46,24 +46,37 @@ def main
 
       workspace.show_details
 
-    when "6", "send_message"
+    when "6", "send message"
 
       print "Please type in a message to send: "
       message = gets.chomp
       workspace.send_message(message)
 
-    when "7", "bot post message"
+    when "7", "bot send message"
 
-      print "Please type in a user name: "
-      user_name = gets.chomp
-      print "Please type in an emoji to use as your icon. For example ':sparkles:' "
-      emoji = gets.chomp
       print "Please type in a message to send: "
       message = gets.chomp
+      
+      file = File.read("bot-settings.json")
+      data_hash = JSON.parse(file)
 
-      workspace.bot_post_message(user_name, emoji, message)
+      workspace.bot_post_message(data_hash["username"], data_hash["icon_emoji"], message)
 
-    when "8", "quit"
+    when "8", "update settings"
+
+    print "Please type in a user name: "
+    user_name = gets.chomp
+    print "Please type in an emoji to use as your icon. For example ':sparkles:' "
+    emoji = gets.chomp
+
+    temp_hash = {
+        "icon_emoji" => emoji,
+        "username" => user_name
+    }
+
+    File.write("bot-settings.json", JSON.dump(temp_hash))
+
+    when "9", "quit"
 
       continue = false
 
