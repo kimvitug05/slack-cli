@@ -1,6 +1,8 @@
 require 'httparty'
 BASE_URL = "https://slack.com/api/"
 
+class SlackApiError < StandardError; end
+
 class Recipient
   attr_reader :slack_id, :name
 
@@ -10,7 +12,12 @@ class Recipient
   end
 
   def self.get(url, params)
-    return HTTParty.get(url, params)
+    response = HTTParty.get(url, params)
+
+    unless response.code == 200 && response.parsed_response["ok"]
+      raise SlackApiError, "SlackApiError!"
+    end
+    return response
   end
 
   def details
@@ -33,4 +40,7 @@ class Recipient
        }
     )
   end
+
+
+
 end
