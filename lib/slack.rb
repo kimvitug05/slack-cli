@@ -60,7 +60,7 @@ def main
       rescue NoMethodError
         puts "You haven't selected any user or channel yet."
       end
-      
+
     when "7", "quit"
 
       continue = false

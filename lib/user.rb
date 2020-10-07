@@ -33,7 +33,7 @@ class User < Recipient
   end
 
   def details
-    return tp self, :name, :real_name, :slack_id
+    return tp self, :name, :real_name, :slack_id, :status_text, :status_emoji
   end
 
 end

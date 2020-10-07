@@ -11,6 +11,7 @@ class Recipient
     @name = name
   end
 
+  #TODO - refactor to not include params (params is always the same). Edit to take endpoint as a parameter
   def self.get(url, params)
     response = HTTParty.get(url, params)
 
