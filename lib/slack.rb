@@ -4,7 +4,7 @@ require_relative 'user'
 require_relative 'channel'
 require 'httparty'
 require 'table_print'
-
+require 'json'
 
 Dotenv.load
 
@@ -44,24 +44,26 @@ def main
 
     when "5", "details"
 
-      begin
-        workspace.show_details
-      rescue NoMethodError
-        puts "You haven't selected any user or channel yet."
-      end
+      workspace.show_details
 
     when "6", "send_message"
 
       print "Please type in a message to send: "
       message = gets.chomp
+      workspace.send_message(message)
 
-      begin
-        workspace.send_message(message)
-      rescue NoMethodError
-        puts "You haven't selected any user or channel yet."
-      end
+    when "7", "bot post message"
 
-    when "7", "quit"
+      print "Please type in a user name: "
+      user_name = gets.chomp
+      print "Please type in an emoji to use as your icon. For example ':sparkles:' "
+      emoji = gets.chomp
+      print "Please type in a message to send: "
+      message = gets.chomp
+
+      workspace.bot_post_message(user_name, emoji, message)
+
+    when "8", "quit"
 
       continue = false
 

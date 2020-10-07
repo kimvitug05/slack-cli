@@ -17,9 +17,7 @@ class User < Recipient
 
 
   def self.list_all
-    response = self.get(USERS_URL, query: {
-        token: ENV["TOKEN"],
-    })
+    response = self.get("users.list")
 
     return response["members"].map do |user|
       self.new(

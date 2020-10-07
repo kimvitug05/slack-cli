@@ -6,48 +6,38 @@ require 'dotenv'
 Dotenv.load
 
 class Workspace
-  attr_reader :users, :channels, :selected
+  attr_reader :users, :channels
+  attr_accessor :selected
 
   def initialize
     @users = User.list_all
     @channels = Channel.list_all
-    @selected = nil
+    # @selected = nil
   end
 
   def select_user(input)
-    @selected = nil
+    @selected = @users.find { |user| user.name == input } || @users.find { |user| user.slack_id == input }
 
-    #TODO -- REFACTOR
-    if @selected.nil?
-      @selected = @users.find { |user| user.name == input }
-    elsif @selected.nil?
-      @selected = @users.find { |user| user.slack_id == input }
-    end
-
-    if @selected.nil?
-      puts "Please enter a valid user name or id."
-    end
+    puts "Please enter a valid user name or id." if @selected.nil?
   end
 
   def select_channel(input)
-    @selected = nil
+    @selected = @channels.find { |channel| channel.name == input } || @channels.find { |channel| channel.id == id }
 
-    #TODO -- REFACTOR
-    if @selected.nil?
-      @selected = @channels.find { |channel| channel.name == input }
-    elsif @selected.nil?
-      @selected = @channels.find { |channel| channel.id == id }
-    elsif @selected.nil?
-      puts "Please enter a valid channel name or id."
-    end
+    puts "Please enter a valid channel name or id." if @selected.nil?
   end
 
   def show_details
-    @selected.details
+    @selected ? @selected.details : ( puts "You haven't selected any user or channel yet." )
   end
 
   def send_message(message)
-    @selected.send_message(message)
+    @selected ? @selected.send_message(message) : ( puts "You haven't selected any user or channel yet." )
+  end
+
+  def bot_post_message(user_name, emoji, message)
+    #TODO
+    @selected ? @selected.bot_post_message(user_name, emoji, message) : ( puts "You haven't selected any user or channel yet." )
   end
 end
 

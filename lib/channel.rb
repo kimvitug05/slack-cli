@@ -1,7 +1,6 @@
 require 'dotenv'
 require_relative 'recipient'
 require 'table_print'
-CHANNELS_URL = "https://slack.com/api/conversations.list"
 
 Dotenv.load
 
@@ -15,9 +14,7 @@ class Channel < Recipient
   end
 
   def self.list_all
-    response = self.get(CHANNELS_URL, query: {
-        token: ENV["TOKEN"],
-    })
+    response = self.get("conversations.list")
 
     return response["channels"].map do |channel|
       self.new(

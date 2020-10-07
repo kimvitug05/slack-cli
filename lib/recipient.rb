@@ -1,8 +1,6 @@
 require 'httparty'
 BASE_URL = "https://slack.com/api/"
 
-class SlackApiError < StandardError; end
-
 class Recipient
   attr_reader :slack_id, :name
 
@@ -11,13 +9,14 @@ class Recipient
     @name = name
   end
 
-  #TODO - refactor to not include params (params is always the same). Edit to take endpoint as a parameter
-  def self.get(url, params)
-    response = HTTParty.get(url, params)
+  def self.get(endpoint)
+    response = HTTParty.get("#{BASE_URL + endpoint}",
+                            query: {token: ENV["TOKEN"] })
 
     unless response.code == 200 && response.parsed_response["ok"]
       raise SlackApiError, "SlackApiError!"
     end
+
     return response
   end
 
@@ -42,6 +41,20 @@ class Recipient
     )
   end
 
+  def bot_post_message(user_name, emoji, message)
+    url = "#{BASE_URL}chat.postMessage"
 
-
+    response = HTTParty.post(url,
+       headers: { 'Content-Type' => 'application/x-www-form-urlencoded' },
+       body: {
+           token: ENV["BOT_TOKEN"],
+           channel: @slack_id,
+           text: message,
+           icon_emoji: emoji,
+           username: user_name
+       }
+    )
+  end
 end
+
+class SlackApiError < StandardError; end
