@@ -16,7 +16,7 @@ def main
 
 
   while continue
-    puts "\nWhat do you want to do? => \n1. List Users\n2. List Channels \n3. Select User \n4. Select Channel \n5. Details \n6. Quit"
+    puts "\nWhat do you want to do? => \n1. List Users\n2. List Channels \n3. Select User \n4. Select Channel \n5. Details \n6. Send Message \n7. Quit"
     print "Selection: "
     input = gets.chomp.downcase
     puts
@@ -50,7 +50,18 @@ def main
         puts "You haven't selected any user or channel yet."
       end
 
-    when "6", "quit"
+    when "6", "send_message"
+
+      print "Please type in a message to send: "
+      message = gets.chomp
+
+      begin
+        workspace.send_message(message)
+      rescue NoMethodError
+        puts "You haven't selected any user or channel yet."
+      end
+      
+    when "7", "quit"
 
       continue = false
 
