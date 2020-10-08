@@ -12,7 +12,7 @@ class Workspace
   def initialize
     @users = User.list_all
     @channels = Channel.list_all
-    # @selected = nil
+    @selected = nil
   end
 
   def select_user(input)
@@ -36,8 +36,15 @@ class Workspace
   end
 
   def bot_post_message(user_name = "SLACKBOT", emoji = ":sparkles:", message)
-    #TODO
     @selected ? @selected.bot_post_message(user_name, emoji, message) : ( puts "You haven't selected any user or channel yet." )
+  end
+
+  def save_message_history(message)
+    @selected ? @selected.save_message_history(message) : ( puts "You haven't selected any user or channel yet." )
+  end
+
+  def show_message_history
+    @selected ? @selected.show_message_history : ( puts "You haven't selected any user or channel yet." )
   end
 end
 

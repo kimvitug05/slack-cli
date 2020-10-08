@@ -1,4 +1,6 @@
 require 'httparty'
+require 'time'
+require 'csv'
 BASE_URL = "https://slack.com/api/"
 
 class Recipient
@@ -14,7 +16,7 @@ class Recipient
                             query: {token: ENV["TOKEN"] })
 
     unless response.code == 200 && response.parsed_response["ok"]
-      raise SlackApiError, "SlackApiError!"
+      raise SlackApiError, "SlackApiError. Reason: #{response["error"]}"
     end
 
     return response
@@ -31,7 +33,7 @@ class Recipient
   def send_message(message)
     url = "#{BASE_URL}chat.postMessage"
 
-    response = HTTParty.post(url,
+    return HTTParty.post(url,
        headers: { 'Content-Type' => 'application/x-www-form-urlencoded' },
        body: {
            token: ENV["TOKEN"],
@@ -44,7 +46,7 @@ class Recipient
   def bot_post_message(user_name, emoji, message)
     url = "#{BASE_URL}chat.postMessage"
 
-    response = HTTParty.post(url,
+    return HTTParty.post(url,
        headers: { 'Content-Type' => 'application/x-www-form-urlencoded' },
        body: {
            token: ENV["BOT_TOKEN"],
@@ -54,6 +56,18 @@ class Recipient
            username: user_name
        }
     )
+  end
+
+  def save_message_history(message)
+    CSV.open('history.csv', 'a') do |file|
+      file << [@name, @slack_id, message, Time.now]
+    end
+  end
+
+  def show_message_history
+    history = CSV.read('history.csv', headers: true).map { |row| row.to_h }
+
+    history.select { |recipient| recipient["RECIPIENT"] == @name || recipient["ID"] == @slack_id }
   end
 end
 
