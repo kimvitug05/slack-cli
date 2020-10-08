@@ -47,8 +47,7 @@ describe "Recipient" do
 
     it "can send an empty message" do
       VCR.use_cassette("slack-posts") do
-        response = @recipient.send_message("")
-        expect( response["ok"] ).must_equal false
+        expect{@recipient.send_message("")}.must_raise SlackApiError
       end
     end
 
@@ -59,4 +58,51 @@ describe "Recipient" do
       end
     end
   end
+
+  describe "bot_post_message" do
+    it "has a bot_post_message method" do
+      expect(@recipient).must_respond_to :bot_post_message
+    end
+
+    it "can send a message as a bot" do
+      VCR.use_cassette("bot_post_message_recipient") do
+        response = @recipient.bot_post_message("Ting-Yi",":sparkles:", "Hello there!")
+        expect(response["ok"]).must_equal true
+        expect(response["message"]["text"]).must_equal "Hello there!"
+      end
+    end
+  end
+
+  describe "save_message_history" do
+    it"saves message history" do
+      history = CSV.read('history.csv', headers: true)
+      length = history.length
+      VCR.use_cassette("save_message") do
+        @recipient.bot_post_message("Ting-Yi",":sparkles:", "Hello there!")
+        @recipient.save_message_history("Hello there!")
+        history = CSV.read('history.csv', headers: true)
+        expect(history.length).must_equal length + 1
+      end
+    end
+  end
+
+  describe "show_message_history" do
+    it "can show the message history of the selected user/channel" do
+      history = CSV.read('history.csv', headers: true).map { |row| row.to_h }
+      history_length = (history.select { |recipient| recipient["RECIPIENT"] == "li.lea.dai"}).length
+      @recipient = Recipient.new("U016W06JGT1", "li.lea.dai")
+      length = @recipient.show_message_history.length
+      expect(length).must_equal history_length
+    end
+
+    it "returns \"no data\" for selected user/channel that does not have history" do
+      @recipient = Recipient.new("U01BK9SFNKH", "cool_app")
+      length = @recipient.show_message_history.length
+      expect(length).must_equal 0
+      expect(@recipient.show_message_history).must_be_empty
+    end
+
+  end
+
 end
+

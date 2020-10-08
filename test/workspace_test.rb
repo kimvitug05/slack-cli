@@ -39,7 +39,7 @@ describe Workspace do
       expect(channel.slack_id).must_equal "C01ABK51G14"
       expect(channel.name).must_equal "test-channel2"
       expect(channel.topic).must_equal ""
-      expect(channel.member_count).must_equal 14
+      expect(channel.member_count).must_equal 16
     end
 
     it "returns nil if no user/id found" do
@@ -63,7 +63,7 @@ describe Workspace do
 
   describe "send_message" do
     it "sends a message to user/channel selected" do
-      VCR.use_cassette("workspace") do
+      VCR.use_cassette("send_message") do
         @workspace.select_user("li.lea.dai")
         response = @workspace.send_message("Hello there!")
         expect(response["ok"]).must_equal true
@@ -71,17 +71,15 @@ describe Workspace do
     end
 
     it "returns nil if no user/channel selected" do
-      VCR.use_cassette("workspace") do
         response = @workspace.send_message("Hello there!")
         expect(response).must_be_nil
-      end
     end
   end
 
   describe "bot_post_message" do
     it "can send a message as a bot" do
-      VCR.use_cassette("workspace") do
-        @workspace.select_user("li.lea.dai")
+      VCR.use_cassette("bot_post_message") do
+        @workspace.select_user("kim_vitug05")
         response = @workspace.bot_post_message("Hello there!")
         expect(response["ok"]).must_equal true
       end
@@ -92,6 +90,50 @@ describe Workspace do
       expect(response).must_be_nil
     end
   end
+
+  describe "save_message_history" do
+    it"saves message history" do
+      history = CSV.read('history.csv', headers: true)
+      length = history.length
+      VCR.use_cassette("save_message") do
+        @workspace.select_user("li.lea.dai")
+        @workspace.bot_post_message("Hello there!")
+        @workspace.save_message_history("Hello there!")
+        history = CSV.read('history.csv', headers: true)
+        expect(history.length).must_equal length + 1
+      end
+    end
+
+    it "returns nil if no user/channel selected" do
+      response = @workspace.save_message_history("Hello there!")
+      expect(response).must_be_nil
+    end
+
+    it"won't save a message that was not sent successfully" do
+      history = CSV.read('history.csv', headers: true)
+      length = history.length
+      @workspace.bot_post_message("Hello there!")
+      @workspace.save_message_history("Hello there!")
+      history = CSV.read('history.csv', headers: true)
+      expect(history.length).must_equal length
+    end
+  end
+
+  describe "show_message_history" do
+    it "can show the message history of the selected user/channel" do
+      @workspace.select_user("li.lea.dai")
+      history = CSV.read('history.csv', headers: true).map { |row| row.to_h }
+      history.select! { |recipient| recipient["RECIPIENT"] == "li.lea.dai"}
+      length = @workspace.show_message_history.length
+      expect(length).must_equal history.length
+    end
+
+    it "returns nil if no user/channel selected" do
+      response = @workspace.show_message_history
+      expect(response).must_be_nil
+    end
+  end
+
 end
 
 

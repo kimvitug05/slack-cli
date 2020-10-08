@@ -33,7 +33,7 @@ class Recipient
   def send_message(message)
     url = "#{BASE_URL}chat.postMessage"
 
-    return HTTParty.post(url,
+    response = HTTParty.post(url,
        headers: { 'Content-Type' => 'application/x-www-form-urlencoded' },
        body: {
            token: ENV["TOKEN"],
@@ -41,12 +41,18 @@ class Recipient
            text: message
        }
     )
+
+    unless response.code == 200 && response.parsed_response["ok"]
+      raise SlackApiError, "SlackApiError. Reason: #{response["error"]}"
+    end
+
+    return response
   end
 
   def bot_post_message(user_name, emoji, message)
     url = "#{BASE_URL}chat.postMessage"
 
-    return HTTParty.post(url,
+     response = HTTParty.post(url,
        headers: { 'Content-Type' => 'application/x-www-form-urlencoded' },
        body: {
            token: ENV["BOT_TOKEN"],
@@ -56,11 +62,17 @@ class Recipient
            username: user_name
        }
     )
+
+    unless response.code == 200 && response.parsed_response["ok"]
+      raise SlackApiError, "SlackApiError. Reason: #{response["error"]}"
+    end
+
+    return response
   end
 
   def save_message_history(message)
     CSV.open('history.csv', 'a') do |file|
-      file << [@name, @slack_id, message, Time.now]
+      file << [@name, @slack_id, message, Time.now] if message != ""
     end
   end
 

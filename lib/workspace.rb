@@ -42,7 +42,7 @@ class Workspace
   end
 
   def save_message_history(message)
-    @selected ? @selected.save_message_history(message) : ( puts "You haven't selected any user or channel yet." )
+    @selected.save_message_history(message) if @selected
   end
 
   def show_message_history
