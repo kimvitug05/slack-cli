@@ -19,12 +19,14 @@ class Workspace
     @selected = @users.find { |user| user.name == input } || @users.find { |user| user.slack_id == input }
 
     puts "Please enter a valid user name or id." if @selected.nil?
+    return @selected
   end
 
   def select_channel(input)
-    @selected = @channels.find { |channel| channel.name == input } || @channels.find { |channel| channel.id == id }
+    @selected = @channels.find { |channel| channel.name == input } || @channels.find { |channel| channel.slack_id == input }
 
     puts "Please enter a valid channel name or id." if @selected.nil?
+    return @selected
   end
 
   def show_details

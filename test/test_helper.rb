@@ -11,6 +11,7 @@ require "minitest/reporters"
 require "vcr"
 require "webmock/minitest"
 require "dotenv"
+require "table_print"
 require_relative '../lib/user'
 require_relative '../lib/channel'
 require_relative '../lib/workspace'

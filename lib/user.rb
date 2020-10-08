@@ -24,8 +24,8 @@ class User < Recipient
         user["id"],
         user["name"],
         user["real_name"],
-        user["status_text"],
-        user["status_emoji"]
+        user["profile"]["status_text"],
+        user["profile"]["status_emoji"]
       )
     end
   end

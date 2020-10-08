@@ -1,5 +1,4 @@
 require_relative 'test_helper'
-require 'awesome_print'
 
 describe User do
   before do
@@ -25,9 +24,8 @@ describe User do
       expect(@response.first.slack_id).must_equal @slack_id
       expect(@response.first.name).must_equal @name
       expect(@response.first.real_name).must_equal @real_name
-      expect(@response.first.status_text).must_be_nil
-      expect(@response.first.status_emoji).must_be_nil
-
+      expect(@response.first.status_text).must_equal ""
+      expect(@response.first.status_emoji).must_equal ""
     end
   end
 
